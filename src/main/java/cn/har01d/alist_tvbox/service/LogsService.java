@@ -1,5 +1,6 @@
 package cn.har01d.alist_tvbox.service;
 
+import io.github.pixee.security.BoundedLineReader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -57,7 +58,7 @@ public class LogsService {
             List<String> result = new ArrayList<>();
             int i = 0;
             for (; ; i++) {
-                String line = reader.readLine();
+                String line = BoundedLineReader.readLine(reader, 5_000_000);
                 if (line == null) {
                     break;
                 }

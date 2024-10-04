@@ -1,6 +1,7 @@
 package cn.har01d.alist_tvbox.util;
 
 import cn.har01d.alist_tvbox.exception.BadRequestException;
+import io.github.pixee.security.BoundedLineReader;
 import jakarta.xml.bind.DatatypeConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -207,7 +208,7 @@ public final class Utils {
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(line);
                 sb.append(System.getProperty("line.separator"));
             }
