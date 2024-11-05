@@ -21,6 +21,8 @@ import cn.har01d.alist_tvbox.util.Constants;
 import cn.har01d.alist_tvbox.util.IdUtils;
 import cn.har01d.alist_tvbox.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -807,7 +809,7 @@ public class SubscriptionService {
 
     private static String getRoot(String path) {
         try {
-            URL url = new URL(path);
+            URL url = Urls.create(path, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             return url.getProtocol() + "://" + url.getHost();
         } catch (MalformedURLException e) {
             log.warn("", e);

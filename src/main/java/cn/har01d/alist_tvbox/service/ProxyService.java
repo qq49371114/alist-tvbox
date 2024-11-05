@@ -8,6 +8,8 @@ import cn.har01d.alist_tvbox.util.Constants;
 import cn.har01d.alist_tvbox.util.Utils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +102,7 @@ public class ProxyService {
     }
 
     private HttpURLConnection openConnection(String httpUrl, Map<String, String> headers) throws IOException {
-        URL url = new URL(httpUrl);
+        URL url = Urls.create(httpUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
