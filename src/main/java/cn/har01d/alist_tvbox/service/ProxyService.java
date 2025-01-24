@@ -8,6 +8,7 @@ import cn.har01d.alist_tvbox.util.Constants;
 import cn.har01d.alist_tvbox.util.Utils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.github.pixee.security.Newlines;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +81,7 @@ public class ProxyService {
             throw new RuntimeException("Failed to download: HTTP " + responseCode);
         }
         response.setStatus(responseCode);
-        urlConnection.getHeaderFields().forEach((key, value) -> response.setHeader(key, value.get(0)));
+        urlConnection.getHeaderFields().forEach((key, value) -> response.setHeader(key, Newlines.stripAll(value.get(0))));
         copyAndCloseInput(urlConnection.getInputStream(), response.getOutputStream());
     }
 
