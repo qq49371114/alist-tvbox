@@ -12,6 +12,8 @@ import cn.har01d.alist_tvbox.model.Response;
 import cn.har01d.alist_tvbox.util.Constants;
 import cn.har01d.alist_tvbox.util.IdUtils;
 import cn.har01d.alist_tvbox.util.Utils;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -283,7 +285,7 @@ public class SiteService {
 
         if (StringUtils.isNotBlank(dto.getUrl())) {
             try {
-                new URL(dto.getUrl());
+                Urls.create(dto.getUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             } catch (Exception e) {
                 throw new BadRequestException("站点地址不正确", e);
             }
@@ -292,7 +294,7 @@ public class SiteService {
         if (dto.isSearchable() && StringUtils.isNotBlank(dto.getIndexFile())) {
             if (dto.getIndexFile().startsWith("http")) {
                 try {
-                    new URL(dto.getIndexFile());
+                    Urls.create(dto.getIndexFile(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 } catch (Exception e) {
                     throw new BadRequestException("索引地址不正确", e);
                 }
