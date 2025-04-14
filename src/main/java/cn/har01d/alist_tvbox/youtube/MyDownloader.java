@@ -11,6 +11,7 @@ import com.github.kiulian.downloader.downloader.request.RequestVideoStreamDownlo
 import com.github.kiulian.downloader.downloader.request.RequestWebpage;
 import com.github.kiulian.downloader.downloader.response.ResponseImpl;
 import com.github.kiulian.downloader.model.videos.formats.Format;
+import io.github.pixee.security.BoundedLineReader;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +114,7 @@ public class MyDownloader implements Downloader {
                     }
                     br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
                     String inputLine;
-                    while ((inputLine = br.readLine()) != null)
+                    while ((inputLine = BoundedLineReader.readLine(br, 5_000_000)) != null)
                         result.append(inputLine).append('\n');
                 } finally {
                     closeSilently(br);
