@@ -24,6 +24,8 @@ import cn.har01d.alist_tvbox.util.Constants;
 import cn.har01d.alist_tvbox.util.TextUtils;
 import cn.har01d.alist_tvbox.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -273,7 +275,7 @@ public class IndexService {
             downloadZipFile(site, url, name);
         } else {
             log.info("download index file from {}", url);
-            FileUtils.copyURLToFile(new URL(url), file);
+            FileUtils.copyURLToFile(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), file);
         }
 
         return file.getAbsolutePath();
@@ -301,7 +303,7 @@ public class IndexService {
     private static String getRemoteTime(Site site, String url) {
         try {
             File file = Files.createTempFile(String.valueOf(site.getId()), ".info").toFile();
-            FileUtils.copyURLToFile(new URL(url), file);
+            FileUtils.copyURLToFile(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), file);
             return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
         } catch (Exception e) {
             // ignore
@@ -311,7 +313,7 @@ public class IndexService {
 
     private static void downloadZipFile(Site site, String url, String name) throws IOException {
         File zipFile = new File(".cache/" + site.getId() + "/" + name);
-        FileUtils.copyURLToFile(new URL(url), zipFile);
+        FileUtils.copyURLToFile(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), zipFile);
         unzip(zipFile);
         Files.delete(zipFile.toPath());
     }
